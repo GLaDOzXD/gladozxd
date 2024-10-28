@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIV ATIS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #atisBox {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CGIV ATIS</h1>
+
+    <div id="atisBox">
+        <p id="atisContent">Fetching ATIS information...</p>
+    </div>
+    <!-- Button removed since we are fetching automatically -->
+    
+    <script>
+        async function fetchATIS() {
+            try {
+                const response = await fetch('https://atisgenerator.com/api/v1/airports/VTBS/metar');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok' + response.statusText);
+                }
+                const data = await response.json();
+                
+                // Extracting the METAR information from the response
+                const metar = data.data.metar; // Accessing the METAR string
+
+                // Display the METAR information
+                document.getElementById("atisContent").innerHTML = metar || "No ATIS information available.";
+            } catch (error) {
+                console.error('Error fetching ATIS:', error);
+                document.getElementById("atisContent").innerHTML = "Error fetching ATIS information.";
+            }
+        }
+
+        // Automatically fetch ATIS information on page load
+        window.onload = fetchATIS; // Call fetchATIS when the window loads
+    </script>
+
+</body>
+</html>
