@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGIV METAR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #metarBox {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CGIV METAR</h1>
+
+    <div id="metarBox">
+        <p id="metarContent">Fetching METAR information...</p>
+    </div>
+    
+    <script>
+        const natoAlphabet = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 'Oscar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
+
+        async function fetchMETAR() {
+            try {
+                const response = await fetch('https://atisgenerator.com/api/v1/airports/VTBD/metar');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok' + response.statusText);
+                }
+                const data = await response.json();
+                let currentMetar = data.data.metar;
+
+                // Replace the ICAO code with "CGIV" regardless of the actual airport code in the fetched METAR
+                currentMetar = currentMetar.replace(/^([A-Z]{4})/, 'CGIV');
+
+                // Get the last stored METAR and alphabet index from localStorage
+                const lastMetar = localStorage.getItem('lastMetar');
+                let alphabetIndex = parseInt(localStorage.getItem('alphabetIndex'), 10) || 0;
+
+                // If the METAR has changed, increment the alphabet index, otherwise keep it the same
+                if (lastMetar !== currentMetar) {
+                    alphabetIndex = (alphabetIndex + 1) % natoAlphabet.length; // Cycle through the NATO alphabet
+                    localStorage.setItem('lastMetar', currentMetar); // Update the last fetched METAR
+                    localStorage.setItem('alphabetIndex', alphabetIndex); // Save the new alphabet index
+                }
+
+                // Display the METAR with the corresponding NATO alphabet letter
+                const metarWithLetter = `${currentMetar} ${natoAlphabet[alphabetIndex]}`;
+                document.getElementById("metarContent").innerHTML = metarWithLetter;
+
+            } catch (error) {
+                console.error('Error fetching METAR:', error);
+                document.getElementById("metarContent").innerHTML = "Error fetching METAR information.";
+            }
+        }
+
+        // Automatically fetch METAR information on page load
+        window.onload = fetchMETAR;
+    </script>
+
+</body>
+</html>
