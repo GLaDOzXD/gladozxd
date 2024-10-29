@@ -40,7 +40,7 @@
                 const data = await response.json();
                 let currentMetar = data.data.metar;
 
-                // Replace the ICAO code with "CGIV" regardless of the actual airport code in the fetched METAR
+                // Replace the ICAO code with "CGIV"
                 currentMetar = currentMetar.replace(/^([A-Z]{4})/, 'CGIV');
 
                 // Get the last stored METAR and alphabet index from localStorage
@@ -54,8 +54,9 @@
                     localStorage.setItem('alphabetIndex', alphabetIndex); // Save the new alphabet index
                 }
 
-                // Display the METAR with the corresponding NATO alphabet letter
-                const metarWithLetter = `${currentMetar} ${natoAlphabet[alphabetIndex]}`;
+                // Add the NATO alphabet letter after the ICAO code
+                const metarWithLetter = `CGIV ${natoAlphabet[alphabetIndex]} ${currentMetar.slice(5)}`;
+
                 document.getElementById("metarContent").innerHTML = metarWithLetter;
 
             } catch (error) {
