@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOGA Clearance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #clearanceBox {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        button {
+            margin-top: 10px; /* Set margin from top */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Dropdown Panel */
+        #dropdownPanel {
+            position: absolute;
+            top: 100px;
+            left: 40px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            width: 350px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dropdown Panel -->
+    <div id="dropdownPanel">
+        <h3>Callsign</h3>
+        <select id="callsignSelect">
+            <option value="01">E-A. AA1. / CCMI, CECDL. CDA01. DRRC.</option>
+            <option value="02">E-A. AA2. / CCMI, CECDL. CDA02. CDSF.</option>
+            <option value="03">E-A. AA3. / CCMI, CECDL. CDA03. CMGW.</option>
+            <option value="MGW">MGW</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <h1>TOGA Clearance Generator</h1>
+
+    <div id="clearanceBox">
+        <p id="clearanceContent">Click the button to generate request for TOGA clearance.</p>
+    </div>
+
+    <!-- Generate Button BELOW the clearance box with margin from the top -->
+    <button onclick="generateClearance()">Request TOGA Clearance</button>
+
+    <script>
+        function generateClearance() {
+            // Get the selected callsign from the dropdown
+            const selectedValue = document.getElementById("callsignSelect").value;
+            let callsign = "";
+
+            // Assign callsign based on selection
+            if (selectedValue === "01") {
+                callsign = "GLaDOzXD";
+            } else if (selectedValue === "02") {
+                callsign = "yeetyboi56";
+            } else if (selectedValue === "03") {
+                callsign = "CrOwZEr19";
+            } else if (selectedValue === "MGW") {
+                callsign = "MGW";
+            }
+
+            const runwayNumber = Math.floor(Math.random() * 36) + 1;
+            const runwaySide = Math.random() > 0.5 ? "L" : "R";
+            const windSpeed = Math.floor(Math.random() * 25) + 1;
+            const gustSpeed = windSpeed + Math.floor(Math.random() * 6) + 1;
+            const windDirection = Math.random() > 0.6 ? `calm` : `${String(Math.floor(Math.random() * 360)).padStart(3, '0')} at ${windSpeed}kts gusting ${gustSpeed}kts`;
+            const heading = Math.random() > 0.6 ? "runway heading" : `heading ${String(Math.floor(Math.random() * 36) * 10).padStart(3, '0')}`;
+            const altitude = Math.floor(Math.random() * 4) + 3;
+            const departureFrequency = `121.${Math.floor(Math.random() * 9) + 1}`;
+            
+            // Generate the clearance text, check if callsign is empty
+            const clearance = `${callsign ? callsign + " " : ""}you are cleared for takeoff runway ${runwayNumber}${runwaySide} winds ${windDirection} fly ${heading} climb maintain ${altitude}000 departure ${departureFrequency} g'day`;
+
+            document.getElementById("clearanceContent").innerHTML = clearance;
+        }
+    </script>
+
+</body>
+</html>
