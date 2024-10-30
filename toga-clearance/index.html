@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOGA Clearance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #clearanceBox {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        button {
+            margin-top: 10px; /* Set margin from top */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        select, input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80px;
+            text-align: center;
+            margin-right: 5px;
+            text-transform: uppercase;
+        }
+        #codeInput {
+            margin-bottom: 20px;
+        }
+        #callsignSelect {
+            width: 350px; /* Adjust width to fit selected option */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Code input field (split into sections) -->
+    <div id="codeInput">
+        <h3>Enter TOGA Clearance Cert. I.D.</h3>
+        <input type="text" id="part1" maxlength="3" oninput="autoJump(this, 'part2'); validateCode()" autofocus>-
+        <input type="text" id="part2" maxlength="3" oninput="autoJump(this, 'part3'); validateCode()">-
+        <input type="text" id="part3" maxlength="6" oninput="autoJump(this, 'part4'); validateCode()">-
+        <input type="text" id="part4" maxlength="5" oninput="validateCode()">
+    </div>
+
+    <!-- Dropdown Panel (Moved here) -->
+    <div id="dropdownPanel">
+        <h3>Callsign</h3>
+        <select id="callsignSelect">
+            <option value=""></option>
+            <option value="01">E-A. AA1. / CCMI, CECDL. CDA01. DRRC.</option>
+            <option value="02">E-A. AA2. / CCMI, CECDL. CDA02. CDSF.</option>
+            <option value="03">E-A. AA3. / CCMI, CECDL. CDA03. CMGW.</option>
+            <option value="MGW">MGW</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div id="clearanceBox">
+        <p id="clearanceContent">Click the button to generate request for TOGA clearance.</p>
+    </div>
+
+    <!-- Generate Button BELOW the clearance box with margin from the top -->
+    <button id="generateButton" onclick="generateClearance()" disabled>Request TOGA Clearance</button>
+
+    <script>
+        // Automatically jump to the next field when max length is reached
+        function autoJump(current, nextFieldId) {
+            if (current.value.length === current.maxLength) {
+                document.getElementById(nextFieldId).focus();
+            }
+        }
+
+        // Validate code and enable/disable button
+        function validateCode() {
+            const part1 = document.getElementById("part1").value.toUpperCase();
+            const part2 = document.getElementById("part2").value.toUpperCase();
+            const part3 = document.getElementById("part3").value.toUpperCase();
+            const part4 = document.getElementById("part4").value.toUpperCase();
+
+            const regexPart1 = /^STZ$/;
+            const regexPart2 = /^CDA$/;
+            const regexPart3 = /^MRTOGA$/;
+            const regexPart4 = /^000[1-3]A$/;
+
+            if (regexPart1.test(part1) && regexPart2.test(part2) && regexPart3.test(part3) && regexPart4.test(part4)) {
+                document.getElementById("generateButton").disabled = false;
+            } else {
+                document.getElementById("generateButton").disabled = true;
+            }
+        }
+
+        // Generate the TOGA clearance
+        function generateClearance() {
+            const selectedValue = document.getElementById("callsignSelect").value;
+            let callsign = "";
+
+            if (selectedValue === "01") {
+                callsign = "GLaDOzXD";
+            } else if (selectedValue === "02") {
+                callsign = "yeetyboi56";
+            } else if (selectedValue === "03") {
+                callsign = "CrOwZEr19";
+            } else if (selectedValue === "MGW") {
+                callsign = "MGW";
+            }
+
+            const runwayNumber = Math.floor(Math.random() * 36) + 1;
+            const runwaySide = Math.random() > 0.5 ? "L" : "R";
+            const windSpeed = Math.floor(Math.random() * 25) + 1;
+            const gustSpeed = windSpeed + Math.floor(Math.random() * 6) + 1;
+            const windDirection = Math.random() > 0.6 ? `calm` : `${String(Math.floor(Math.random() * 360)).padStart(3, '0')} at ${windSpeed}kts gusting ${gustSpeed}kts`;
+            const heading = Math.random() > 0.6 ? "runway heading" : `heading ${String(Math.floor(Math.random() * 36) * 10).padStart(3, '0')}`;
+            const altitude = Math.floor(Math.random() * 4) + 3;
+            const departureFrequency = `121.${Math.floor(Math.random() * 9) + 1}`;
+            
+            const clearance = `${callsign ? callsign + " " : ""}you are cleared for takeoff runway ${runwayNumber}${runwaySide} winds ${windDirection} fly ${heading} climb maintain ${altitude}000 departure ${departureFrequency} g'day`;
+
+            document.getElementById("clearanceContent").innerHTML = clearance;
+        }
+    </script>
+
+</body>
+</html>
