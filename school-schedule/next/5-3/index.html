@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-top: 0px;
+            color: #333;
+        }
+
+        #subject {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="subject">Loading...</div>
+
+    <script>
+        // Schedule data directly in the HTML file
+        const schedule = [
+            // Format: ["Day", "Start-End", "Subject"]
+            ["Monday", "07:40-08:00", "Homeroom"],
+            ["Monday", "08:00-08:15", "Chinese"],
+            ["Monday", "08:15-09:55", "Chemistry"],
+            ["Monday", "09:55-10:45", "Break"],
+            ["Monday", "10:45-11:00", "Social"],
+            ["Monday", "11:00-11:50", "Physics"],
+            ["Monday", "11:50-12:40", "Lunch"],
+            ["Monday", "12:40-13:30", "Dance"],
+            ["Monday", "13:30-14:20", "Science"],
+            ["Monday", "14:20-15:10", "Eng-Maths"],
+
+            ["Tuesday", "07:40-08:00", "Homeroom"],
+            ["Tuesday", "08:00-08:15", "Maths"],
+            ["Tuesday", "08:15-09:05", "History"],
+            ["Tuesday", "09:05-09:55", "Thai"],
+            ["Tuesday", "09:55-10:45", "Break"],
+            ["Tuesday", "10:45-11:00", "Saylee"],
+            ["Tuesday", "11:00-12:40", "Lunch"],
+            ["Tuesday", "12:40-13:30", "Physics"],
+            ["Tuesday", "13:30-14:20", "Biology"],
+            ["Tuesday", "14:20-15:10", "Eng-Writing"],
+
+            ["Wednesday", "07:40-08:00", "Homeroom"],
+            ["Wednesday", "08:00-08:15", "Chinese"],
+            ["Wednesday", "08:15-09:55", "Physics"],
+            ["Wednesday", "09:55-10:45", "Break"],
+            ["Wednesday", "10:45-11:00", "Chemistry"],
+            ["Wednesday", "11:00-11:50", "Maths"],
+            ["Wednesday", "11:50-12:40", "Lunch"],
+            ["Wednesday", "12:40-13:30", "Neaneaw"],
+            ["Wednesday", "13:30-14:20", "Hygene"],
+            ["Wednesday", "14:20-15:10", "English"],
+
+            ["Thursday", "07:40-08:00", "Homeroom"],
+            ["Thursday", "08:00-08:15", "Free"],
+            ["Thursday", "08:15-09:05", "Science"],
+            ["Thursday", "09:05-09:55", "Art"],
+            ["Thursday", "09:55-10:45", "Break"],
+            ["Thursday", "10:45-11:00", "Maths"],
+            ["Thursday", "11:00-12:40", "Lunch"],
+            ["Thursday", "12:40-13:30", "Thai"],
+            ["Thursday", "13:30-14:20", "Social"],
+            ["Thursday", "14:20-15:10", "IELTS"],
+
+            ["Friday", "07:40-08:00", "Homeroom"],
+            ["Friday", "08:00-08:15", "Eng-Maths"],
+            ["Friday", "08:15-09:05", "Biology"],
+            ["Friday", "09:05-10:45", "Break"],
+            ["Friday", "10:45-11:00", "English"],
+            ["Friday", "11:00-11:50", "Science"],
+            ["Friday", "11:50-12:40", "Lunch"],
+            ["Friday", "12:40-13:30", "Eng-Present"],
+            ["Friday", "13:30-14:20", "Club"],
+            ["Friday", "14:20-15:10", "HOME"]
+        ];
+
+        function getCurrentSubject() {
+            const now = new Date();
+            const currentDay = now.toLocaleString('en-US', { weekday: 'long' });
+            const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes since midnight
+
+            let currentSubject = "No Class";
+
+            for (let entry of schedule) {
+                const [day, timeRange, subject] = entry;
+                if (day !== currentDay) continue;
+
+                const [startTime, endTime] = timeRange.split('-').map(t => {
+                    const [hours, minutes] = t.split(':').map(Number);
+                    return hours * 60 + minutes; // Convert schedule times to minutes since midnight
+                });
+
+                if (currentTime >= startTime && currentTime < endTime) {
+                    currentSubject = subject;
+                    break;
+                }
+            }
+
+            document.getElementById('subject').innerText = currentSubject;
+        }
+
+        // Call function to display current subject
+        getCurrentSubject();
+
+        // Optionally, update the subject every minute to keep it accurate
+        setInterval(getCurrentSubject, 30000); // 60000 ms = 1 minute
+    </script>
+</body>
+</html>
